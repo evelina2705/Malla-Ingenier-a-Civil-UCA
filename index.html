@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Malla Interactiva - Plan por Año en Columnas</title>
+  <title>Malla Interactiva - Fondo neutro y tonos azules en títulos y materias</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #e0e7ff, #a5b8ff);
+      background: #fafafa;
       margin: 0; padding: 25px;
       color: #0b2e7f;
       user-select: none;
@@ -17,12 +17,11 @@
       text-align: center;
       margin-bottom: 35px;
       color: #0b3d91;
-      text-shadow: 1px 1px 3px #aac1ff;
       font-weight: 700;
       letter-spacing: 1.5px;
     }
 
-    /* Contenedor principal: fila horizontal con scroll */
+    /* Contenedor principal - fila horizontal */
     #planEstudios {
       display: flex;
       gap: 25px;
@@ -32,13 +31,13 @@
       padding-bottom: 15px;
 
       scrollbar-width: thin;
-      scrollbar-color: #2853c8 #c9d6ffcc;
+      scrollbar-color: #2853c8 #dcdcdc;
     }
     #planEstudios::-webkit-scrollbar {
       height: 10px;
     }
     #planEstudios::-webkit-scrollbar-track {
-      background: #c9d6ffcc;
+      background: #dcdcdc;
       border-radius: 10px;
     }
     #planEstudios::-webkit-scrollbar-thumb {
@@ -50,42 +49,45 @@
     .year-container {
       border: 2.5px solid #2853c8;
       border-radius: 10px;
-      padding: 15px 10px 20px 10px;
-      background: #c9d6ffcc;
-      box-shadow: 3px 4px 10px #7b8bc1aa;
-      min-width: 160px;
+      padding: 10px 10px 15px 10px;
+      background: #ffffff;
+      box-shadow: 3px 4px 10px #b0b8d8aa;
+      min-width: 170px;
       max-height: 80vh;
-      overflow-y: auto;
-
       display: flex;
       flex-direction: column;
       align-items: center;
-
-      flex-shrink: 0; /* no se achique */
-    }
-    .year-container:hover {
-      box-shadow: 5px 7px 18px #5479ffcc;
+      flex-shrink: 0; /* que no se achique */
     }
 
-    /* Título del año */
+    /* Título del año con fondo azul */
     .year-title {
       font-size: 1.8em;
       margin-bottom: 15px;
-      border-bottom: 3px solid #1740c1;
-      padding-bottom: 8px;
-      font-weight: 600;
-      color: #1740c1;
-      text-shadow: 0 0 5px #3a57a9;
+      padding: 8px 12px;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, #3a57a9, #597bd1);
+      border-radius: 8px;
       width: 100%;
       text-align: center;
       user-select: text;
+      box-shadow: 0 0 8px #3a57a9aa;
       white-space: nowrap;
+    }
+
+    /* Contenedor para materias con scroll vertical si hay muchas */
+    .materias-list {
+      width: 100%;
+      overflow-y: auto;
+      max-height: calc(80vh - 70px); /* espacio para título y padding */
+      padding-right: 5px;
     }
 
     /* Materias */
     .subject {
       background: #d3dbff;
-      margin: 5px 0;
+      margin: 6px 0;
       padding: 8px 12px;
       border-radius: 8px;
       cursor: pointer;
@@ -131,7 +133,7 @@
   </style>
 </head>
 <body>
-  <h1>Malla Interactiva - Plan por Año en Columnas</h1>
+  <h1>Malla Interactiva - Plan por Año</h1>
 
   <div id="planEstudios"></div>
 
@@ -146,13 +148,11 @@
       { id: 'mat7', nombre: 'Álgebra y Geometría', año: 2, correlativas: ['mat3'] },
       { id: 'mat8', nombre: 'Representación Gráfica Digital', año: 2, correlativas: [] },
       { id: 'mat9', nombre: 'Física I', año: 2, correlativas: ['mat4'] },
-      // Agregá más materias según tu plan...
+      // Podés agregar más materias aquí...
     ];
 
-    // Obtener todos los años distintos ordenados
     const años = [...new Set(materias.map(m => m.año))].sort();
 
-    // Estado guardado en localStorage para persistencia
     const estadoGuardado = JSON.parse(localStorage.getItem('estadoMaterias')) || {};
 
     const planDiv = document.getElementById('planEstudios');
@@ -169,11 +169,15 @@
         const contenedorAño = document.createElement('div');
         contenedorAño.classList.add('year-container');
 
-        // Título con el formato ordinal
+        // Título azul del año
         const tituloAño = document.createElement('h2');
         tituloAño.classList.add('year-title');
         tituloAño.textContent = `${año}° Año`;
         contenedorAño.appendChild(tituloAño);
+
+        // Lista materias con scroll si necesario
+        const listaMaterias = document.createElement('div');
+        listaMaterias.classList.add('materias-list');
 
         const materiasDelAño = materias.filter(m => m.año === año);
 
@@ -200,9 +204,10 @@
             renderizarMaterias();
           });
 
-          contenedorAño.appendChild(divMateria);
+          listaMaterias.appendChild(divMateria);
         });
 
+        contenedorAño.appendChild(listaMaterias);
         planDiv.appendChild(contenedorAño);
       });
     }
