@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Malla Interactiva Completa - Plan de Estudios</title>
+<title>Malla Interactiva - Orden Exacto</title>
 <style>
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -119,16 +119,16 @@
 </style>
 </head>
 <body>
-<h1>Malla Interactiva - Plan Completo</h1>
+<h1>Malla Interactiva - Plan Exacto</h1>
 <div id="planEstudios"></div>
 <script>
-  // Lista completa de materias con correlativas (id únicos sin espacios)
+  // Materias ordenadas EXACTO tal cual las diste, con correlativas referenciadas
   const materias = [
     // 1er Año
     { id: 'intro_ingenieria', nombre: 'Introducción a la Ingeniería', año: 1, correlativas: [] },
     { id: 'quimica_I', nombre: 'Química I', año: 1, correlativas: [] },
     { id: 'complementos_matematicas', nombre: 'Complementos de Matemáticas', año: 1, correlativas: [] },
-    { id: 'calculo_elemental', nombre: 'Cálculo Elemental', año: 1, correlativas: ['complementos_matematicas'] },
+    { id: 'calculo_elemental', nombre: 'Cálculo Elemental', año: 1, correlativas: [] },
     { id: 'informatica_general', nombre: 'Informática General', año: 1, correlativas: [] },
     { id: 'intro_filosofia', nombre: 'Introducción a la filosofía', año: 1, correlativas: [] },
     { id: 'quimica_II', nombre: 'Química II', año: 1, correlativas: ['quimica_I'] },
@@ -201,7 +201,6 @@
 
   const planDiv = document.getElementById('planEstudios');
 
-  // Verifica si las correlativas están todas aprobadas para habilitar
   function estaHabilitada(materia) {
     if (materia.correlativas.length === 0) return true;
     return materia.correlativas.every(idCorrelativa => estadoGuardado[idCorrelativa] === true);
