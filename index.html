@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Malla Interactiva - Fondo neutro y tonos azules en títulos y materias</title>
+  <title>Malla Interactiva - Plan por Año en Columnas</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -21,7 +21,7 @@
       letter-spacing: 1.5px;
     }
 
-    /* Contenedor principal - fila horizontal */
+    /* Contenedor principal: fila horizontal con scroll */
     #planEstudios {
       display: flex;
       gap: 25px;
@@ -53,11 +53,15 @@
       background: #ffffff;
       box-shadow: 3px 4px 10px #b0b8d8aa;
       min-width: 170px;
-      max-height: 80vh;
+
+      /* Quité max-height para que no limite la altura y se vean todas las materias */
+      /* max-height: 80vh; */
+      /* overflow-y: auto; */
+
       display: flex;
       flex-direction: column;
       align-items: center;
-      flex-shrink: 0; /* que no se achique */
+      flex-shrink: 0; /* importante que no se achique para que se vean todos los años */
     }
 
     /* Título del año con fondo azul */
@@ -76,11 +80,12 @@
       white-space: nowrap;
     }
 
-    /* Contenedor para materias con scroll vertical si hay muchas */
+    /* Contenedor para materias sin límite de altura */
     .materias-list {
       width: 100%;
-      overflow-y: auto;
-      max-height: calc(80vh - 70px); /* espacio para título y padding */
+      /* Quité scroll vertical para mostrar todo */
+      /* overflow-y: auto; */
+      /* max-height: calc(80vh - 70px); */
       padding-right: 5px;
     }
 
@@ -133,22 +138,32 @@
   </style>
 </head>
 <body>
-  <h1>Malla Interactiva - Plan por Año</h1>
+  <h1>Malla Interactiva - Plan por Año en Columnas</h1>
 
   <div id="planEstudios"></div>
 
   <script>
     const materias = [
+      // Ejemplo ampliado para probar varias materias y años
       { id: 'mat1', nombre: 'Introducción a la Ingeniería', año: 1, correlativas: [] },
       { id: 'mat2', nombre: 'Química I', año: 1, correlativas: [] },
       { id: 'mat3', nombre: 'Complementos de Matemáticas', año: 1, correlativas: [] },
       { id: 'mat4', nombre: 'Cálculo Elemental', año: 1, correlativas: ['mat3'] },
       { id: 'mat5', nombre: 'Informática General', año: 1, correlativas: [] },
+
       { id: 'mat6', nombre: 'Química II', año: 2, correlativas: ['mat2'] },
       { id: 'mat7', nombre: 'Álgebra y Geometría', año: 2, correlativas: ['mat3'] },
       { id: 'mat8', nombre: 'Representación Gráfica Digital', año: 2, correlativas: [] },
       { id: 'mat9', nombre: 'Física I', año: 2, correlativas: ['mat4'] },
-      // Podés agregar más materias aquí...
+      { id: 'mat10', nombre: 'Electrónica Básica', año: 2, correlativas: [] },
+
+      { id: 'mat11', nombre: 'Física II', año: 3, correlativas: ['mat9'] },
+      { id: 'mat12', nombre: 'Matemática Superior', año: 3, correlativas: ['mat7'] },
+      { id: 'mat13', nombre: 'Termodinámica', año: 3, correlativas: ['mat6'] },
+      { id: 'mat14', nombre: 'Programación Avanzada', año: 3, correlativas: ['mat5'] },
+
+      { id: 'mat15', nombre: 'Proyectos Finales', año: 4, correlativas: ['mat12', 'mat13'] },
+      { id: 'mat16', nombre: 'Investigación Aplicada', año: 4, correlativas: ['mat14'] },
     ];
 
     const años = [...new Set(materias.map(m => m.año))].sort();
@@ -175,7 +190,7 @@
         tituloAño.textContent = `${año}° Año`;
         contenedorAño.appendChild(tituloAño);
 
-        // Lista materias con scroll si necesario
+        // Lista materias SIN scroll vertical para mostrar todo
         const listaMaterias = document.createElement('div');
         listaMaterias.classList.add('materias-list');
 
@@ -216,3 +231,4 @@
   </script>
 </body>
 </html>
+
