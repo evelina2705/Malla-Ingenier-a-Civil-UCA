@@ -1,234 +1,261 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Malla Interactiva - Plan por Año en Columnas</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #fafafa;
-      margin: 0; padding: 25px;
-      color: #0b2e7f;
-      user-select: none;
-      overflow-x: hidden;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 35px;
-      color: #0b3d91;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-    }
-
-    /* Contenedor principal: fila horizontal con scroll */
-    #planEstudios {
-      display: flex;
-      gap: 25px;
-      justify-content: flex-start;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      padding-bottom: 15px;
-
-      scrollbar-width: thin;
-      scrollbar-color: #2853c8 #dcdcdc;
-    }
-    #planEstudios::-webkit-scrollbar {
-      height: 10px;
-    }
-    #planEstudios::-webkit-scrollbar-track {
-      background: #dcdcdc;
-      border-radius: 10px;
-    }
-    #planEstudios::-webkit-scrollbar-thumb {
-      background-color: #2853c8;
-      border-radius: 10px;
-    }
-
-    /* Cada columna año */
-    .year-container {
-      border: 2.5px solid #2853c8;
-      border-radius: 10px;
-      padding: 10px 10px 15px 10px;
-      background: #ffffff;
-      box-shadow: 3px 4px 10px #b0b8d8aa;
-      min-width: 170px;
-
-      /* Quité max-height para que no limite la altura y se vean todas las materias */
-      /* max-height: 80vh; */
-      /* overflow-y: auto; */
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex-shrink: 0; /* importante que no se achique para que se vean todos los años */
-    }
-
-    /* Título del año con fondo azul */
-    .year-title {
-      font-size: 1.8em;
-      margin-bottom: 15px;
-      padding: 8px 12px;
-      font-weight: 700;
-      color: white;
-      background: linear-gradient(135deg, #3a57a9, #597bd1);
-      border-radius: 8px;
-      width: 100%;
-      text-align: center;
-      user-select: text;
-      box-shadow: 0 0 8px #3a57a9aa;
-      white-space: nowrap;
-    }
-
-    /* Contenedor para materias sin límite de altura */
-    .materias-list {
-      width: 100%;
-      /* Quité scroll vertical para mostrar todo */
-      /* overflow-y: auto; */
-      /* max-height: calc(80vh - 70px); */
-      padding-right: 5px;
-    }
-
-    /* Materias */
-    .subject {
-      background: #d3dbff;
-      margin: 6px 0;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      border: 2px solid #3a57a9;
-      width: 100%;
-      text-align: center;
-      font-weight: 600;
-      color: #1a2e8f;
-      box-shadow: 1px 2px 6px #2e4eb7aa;
-      transition:
-        background-color 0.3s ease,
-        color 0.3s ease,
-        box-shadow 0.3s ease,
-        transform 0.15s ease;
-      user-select: none;
-      font-size: 0.9em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .subject:hover:not(.disabled):not(.completed) {
-      background-color: #a3b6ff;
-      color: #102f72;
-      box-shadow: 2px 4px 10px #2444a9cc;
-      transform: translateY(-2px);
-    }
-    .subject.disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-      background: #9daae4;
-      border-color: #7b8bc1;
-      color: #555d8f;
-      box-shadow: none;
-      text-decoration: none !important;
-    }
-    .subject.completed {
-      text-decoration: line-through;
-      background: #2946ad;
-      color: white;
-      border-color: #1d2f6a;
-      box-shadow: 1px 2px 8px #112255cc;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Malla Interactiva Completa - Plan de Estudios</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #fafafa;
+    margin: 0; padding: 25px;
+    color: #0b2e7f;
+    user-select: none;
+    overflow-x: hidden;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 35px;
+    color: #0b3d91;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+  #planEstudios {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: #2853c8 #dcdcdc;
+  }
+  #planEstudios::-webkit-scrollbar {
+    height: 10px;
+  }
+  #planEstudios::-webkit-scrollbar-track {
+    background: #dcdcdc;
+    border-radius: 10px;
+  }
+  #planEstudios::-webkit-scrollbar-thumb {
+    background-color: #2853c8;
+    border-radius: 10px;
+  }
+  .year-container {
+    flex-shrink: 0;
+    min-width: 220px;
+    border: 2.5px solid #2853c8;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 3px 4px 10px #b0b8d8aa;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 90vh;
+  }
+  .year-title {
+    font-size: 1.9em;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(135deg, #3a57a9, #597bd1);
+    border-radius: 8px;
+    padding: 10px 12px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px;
+    user-select: text;
+    white-space: nowrap;
+    box-shadow: 0 0 8px #3a57a9aa;
+  }
+  .materias-list {
+    width: 100%;
+    overflow-y: auto;
+    max-height: calc(90vh - 90px);
+    padding-right: 5px;
+  }
+  .subject {
+    background: #d3dbff;
+    margin: 6px 0;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid #3a57a9;
+    font-weight: 600;
+    color: #1a2e8f;
+    cursor: pointer;
+    box-shadow: 1px 2px 6px #2e4eb7aa;
+    text-align: center;
+    font-size: 0.9em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.15s ease;
+  }
+  .subject:hover:not(.disabled):not(.completed) {
+    background-color: #a3b6ff;
+    color: #102f72;
+    box-shadow: 2px 4px 10px #2444a9cc;
+    transform: translateY(-2px);
+  }
+  .subject.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background: #9daae4;
+    border-color: #7b8bc1;
+    color: #555d8f;
+    box-shadow: none;
+    text-decoration: none !important;
+  }
+  .subject.completed {
+    text-decoration: line-through;
+    background: #2946ad;
+    color: white;
+    border-color: #1d2f6a;
+    box-shadow: 1px 2px 8px #112255cc;
+  }
+</style>
 </head>
 <body>
-  <h1>Malla Interactiva - Plan por Año en Columnas</h1>
+<h1>Malla Interactiva - Plan Completo</h1>
+<div id="planEstudios"></div>
+<script>
+  // Lista completa de materias con correlativas (id únicos sin espacios)
+  const materias = [
+    // 1er Año
+    { id: 'intro_ingenieria', nombre: 'Introducción a la Ingeniería', año: 1, correlativas: [] },
+    { id: 'quimica_I', nombre: 'Química I', año: 1, correlativas: [] },
+    { id: 'complementos_matematicas', nombre: 'Complementos de Matemáticas', año: 1, correlativas: [] },
+    { id: 'calculo_elemental', nombre: 'Cálculo Elemental', año: 1, correlativas: ['complementos_matematicas'] },
+    { id: 'informatica_general', nombre: 'Informática General', año: 1, correlativas: [] },
+    { id: 'intro_filosofia', nombre: 'Introducción a la filosofía', año: 1, correlativas: [] },
+    { id: 'quimica_II', nombre: 'Química II', año: 1, correlativas: ['quimica_I'] },
+    { id: 'repr_grafica_digital', nombre: 'Representación Gráfica Digital', año: 1, correlativas: [] },
+    { id: 'algebra_geometria', nombre: 'Álgebra y Geometría', año: 1, correlativas: ['complementos_matematicas'] },
+    { id: 'seminario_filosofia', nombre: 'Seminario de la profundización filosófica', año: 1, correlativas: ['intro_filosofia'] },
+    { id: 'fisica_I', nombre: 'Física I', año: 1, correlativas: ['calculo_elemental'] },
 
-  <div id="planEstudios"></div>
+    // 2do Año
+    { id: 'fisica_II', nombre: 'Física II', año: 2, correlativas: ['fisica_I'] },
+    { id: 'intro_ingenieria_civil', nombre: 'Introducción a la Ingeniería Civil', año: 2, correlativas: ['intro_ingenieria'] },
+    { id: 'calculo_avanzado', nombre: 'Cálculo Avanzado', año: 2, correlativas: ['calculo_elemental', 'algebra_geometria'] },
+    { id: 'estabilidad_I', nombre: 'Estabilidad I', año: 2, correlativas: ['fisica_I'] },
+    { id: 'intro_teologia', nombre: 'Introducción a la Teología', año: 2, correlativas: ['intro_filosofia'] },
+    { id: 'repr_grafica_digital_aplicada', nombre: 'Representación Gráfica Digital Aplicada', año: 2, correlativas: ['repr_grafica_digital'] },
+    { id: 'estabilidad_II', nombre: 'Estabilidad II', año: 2, correlativas: ['estabilidad_I'] },
+    { id: 'fisica_III', nombre: 'Física III', año: 2, correlativas: ['fisica_II', 'calculo_avanzado'] },
+    { id: 'probabilidad_estadistica', nombre: 'Probabilidad y Estadística', año: 2, correlativas: [] },
+    { id: 'seminario_teologia', nombre: 'Seminario de Profundización Teológica', año: 2, correlativas: ['intro_teologia'] },
+    { id: 'matematica_superior', nombre: 'Matemática Superior', año: 2, correlativas: ['calculo_avanzado'] },
 
-  <script>
-    const materias = [
-      // Ejemplo ampliado para probar varias materias y años
-      { id: 'mat1', nombre: 'Introducción a la Ingeniería', año: 1, correlativas: [] },
-      { id: 'mat2', nombre: 'Química I', año: 1, correlativas: [] },
-      { id: 'mat3', nombre: 'Complementos de Matemáticas', año: 1, correlativas: [] },
-      { id: 'mat4', nombre: 'Cálculo Elemental', año: 1, correlativas: ['mat3'] },
-      { id: 'mat5', nombre: 'Informática General', año: 1, correlativas: [] },
+    // 3er Año
+    { id: 'mecanica_estructural', nombre: 'Mecánica Estructural', año: 3, correlativas: ['estabilidad_II'] },
+    { id: 'ensayo_materiales', nombre: 'Estudio y Ensayo de Materiales', año: 3, correlativas: ['estabilidad_II', 'quimica_II'] },
+    { id: 'hidraulica_general', nombre: 'Hidráulica General', año: 3, correlativas: ['matematica_superior'] },
+    { id: 'topografia_geodesia', nombre: 'Topografía y Geodesia', año: 3, correlativas: ['algebra_geometria', 'repr_grafica_digital_aplicada'] },
+    { id: 'metodos_numericos', nombre: 'Métodos Numéricos', año: 3, correlativas: ['matematica_superior'] },
+    { id: 'etica_filosofica', nombre: 'Nociones de Ética Filosófica y Deontología Profesional', año: 3, correlativas: ['intro_filosofia'] },
+    { id: 'termodinamica_aplicada', nombre: 'Termodinámica Aplicada', año: 3, correlativas: ['fisica_II'] },
+    { id: 'mecanica_suelos', nombre: 'Mecánica de Suelos y Fundaciones', año: 3, correlativas: ['estabilidad_II', 'hidraulica_general'] },
+    { id: 'construcciones', nombre: 'Construcciones', año: 3, correlativas: ['repr_grafica_digital_aplicada'] },
+    { id: 'diseno_vias', nombre: 'Diseño Geométrico de Vías de Comunicación', año: 3, correlativas: ['hidraulica_general', 'topografia_geodesia'] },
+    { id: 'electrotecnia_aplicada', nombre: 'Electrotecnia Aplicada', año: 3, correlativas: ['fisica_III'] },
 
-      { id: 'mat6', nombre: 'Química II', año: 2, correlativas: ['mat2'] },
-      { id: 'mat7', nombre: 'Álgebra y Geometría', año: 2, correlativas: ['mat3'] },
-      { id: 'mat8', nombre: 'Representación Gráfica Digital', año: 2, correlativas: [] },
-      { id: 'mat9', nombre: 'Física I', año: 2, correlativas: ['mat4'] },
-      { id: 'mat10', nombre: 'Electrónica Básica', año: 2, correlativas: [] },
+    // 4to Año
+    { id: 'hormigon_estructural_I', nombre: 'Hormigón Estructural I', año: 4, correlativas: ['mecanica_estructural', 'ensayo_materiales'] },
+    { id: 'estructuras_metalicas_I', nombre: 'Estructuras Metálicas I', año: 4, correlativas: ['mecanica_estructural', 'ensayo_materiales'] },
+    { id: 'hidrologia_obras', nombre: 'Hidrología y Obras Hidráulicas', año: 4, correlativas: ['hidraulica_general'] },
+    { id: 'arquitectura_planeamiento', nombre: 'Arquitectura y Planeamiento Urbano', año: 4, correlativas: ['repr_grafica_digital_aplicada'] },
+    { id: 'economia', nombre: 'Economía', año: 4, correlativas: ['calculo_elemental'] },
+    { id: 'diseno_pavimentos', nombre: 'Diseño y Construcción de Pavimentos', año: 4, correlativas: ['mecanica_suelos', 'ensayo_materiales', 'diseno_vias'] },
+    { id: 'hormigon_estructural_II', nombre: 'Hormigón Estructural II', año: 4, correlativas: ['mecanica_suelos', 'hormigon_estructural_I'] },
+    { id: 'economia_empresa', nombre: 'Economía de la Empresa', año: 4, correlativas: ['economia'] },
+    { id: 'taller_final', nombre: 'Taller Metodológico de Trabajo Final', año: 4, correlativas: ['economia_empresa', 'arquitectura_planeamiento'] },
+    { id: 'estructuras_metalicas_II', nombre: 'Estructuras Metálicas II', año: 4, correlativas: ['estructuras_metalicas_I'] },
+    { id: 'saneamiento_ambiental', nombre: 'Saneamiento y Gestión Ambiental', año: 4, correlativas: ['hidraulica_general', 'quimica_II'] },
+    { id: 'aeropuertos', nombre: 'Aeropuertos', año: 4, correlativas: ['topografia_geodesia', 'diseno_pavimentos'] },
+    { id: 'legislacion_ejercicio', nombre: 'Legislación y Ejercicio Profesional', año: 4, correlativas: ['etica_filosofica'] },
+    { id: 'etica_teologica', nombre: 'Nociones de Ética Teológica y Pensamiento Social Cristiano', año: 4, correlativas: ['etica_filosofica', 'intro_teologia'] },
 
-      { id: 'mat11', nombre: 'Física II', año: 3, correlativas: ['mat9'] },
-      { id: 'mat12', nombre: 'Matemática Superior', año: 3, correlativas: ['mat7'] },
-      { id: 'mat13', nombre: 'Termodinámica', año: 3, correlativas: ['mat6'] },
-      { id: 'mat14', nombre: 'Programación Avanzada', año: 3, correlativas: ['mat5'] },
+    // 5to Año
+    { id: 'ferrocarriles', nombre: 'Ferrocarriles', año: 5, correlativas: ['diseno_vias'] },
+    { id: 'maquinas_construccion', nombre: 'Máquinas para la Construcción', año: 5, correlativas: ['diseno_vias', 'arquitectura_planeamiento'] },
+    { id: 'hormigon_estructural_III', nombre: 'Hormigón Estructural III', año: 5, correlativas: ['hormigon_estructural_II'] },
+    { id: 'proyecto_estructuras_I', nombre: 'Proyecto de Estructuras I', año: 5, correlativas: ['hormigon_estructural_II', 'estructuras_metalicas_II'] },
+    { id: 'instalaciones_edificios', nombre: 'Instalaciones de Edificios', año: 5, correlativas: ['hidraulica_general', 'termodinamica_aplicada', 'electrotecnia_aplicada'] },
+    { id: 'finanzas_proyectos', nombre: 'Finanzas y Evaluación de Proyectos', año: 5, correlativas: ['economia_empresa'] },
+    { id: 'gerenciamiento_proyectos', nombre: 'Gerenciamiento y Dirección de Proyectos', año: 5, correlativas: ['finanzas_proyectos'] },
+    { id: 'analisis_planeamiento_transporte', nombre: 'Análisis y Planeamiento de Sistemas de Transporte', año: 5, correlativas: ['finanzas_proyectos'] },
+    { id: 'higiene_seguridad', nombre: 'Higiene, Seguridad Laboral y Medio Ambiente', año: 5, correlativas: ['maquinas_construccion'] },
+    { id: 'organizacion_planificacion', nombre: 'Organización y Planificación de Obras', año: 5, correlativas: ['economia_empresa'] },
+    { id: 'proyecto_estructuras_II', nombre: 'Proyecto de Estructuras II', año: 5, correlativas: ['proyecto_estructuras_I'] },
+    { id: 'puertos_vias', nombre: 'Puertos y Vías Navegables', año: 5, correlativas: ['hidraulica_general', 'hormigon_estructural_II', 'estructuras_metalicas_II'] },
+    { id: 'hormigon_estructural_IV', nombre: 'Hormigón Estructural IV', año: 5, correlativas: ['hormigon_estructural_III'] }
+  ];
 
-      { id: 'mat15', nombre: 'Proyectos Finales', año: 4, correlativas: ['mat12', 'mat13'] },
-      { id: 'mat16', nombre: 'Investigación Aplicada', año: 4, correlativas: ['mat14'] },
-    ];
+  const años = [...new Set(materias.map(m => m.año))].sort();
 
-    const años = [...new Set(materias.map(m => m.año))].sort();
+  const estadoGuardado = JSON.parse(localStorage.getItem('estadoMaterias')) || {};
 
-    const estadoGuardado = JSON.parse(localStorage.getItem('estadoMaterias')) || {};
+  const planDiv = document.getElementById('planEstudios');
 
-    const planDiv = document.getElementById('planEstudios');
+  // Verifica si las correlativas están todas aprobadas para habilitar
+  function estaHabilitada(materia) {
+    if (materia.correlativas.length === 0) return true;
+    return materia.correlativas.every(idCorrelativa => estadoGuardado[idCorrelativa] === true);
+  }
 
-    function estaHabilitada(materia) {
-      if (materia.correlativas.length === 0) return true;
-      return materia.correlativas.every(idCorrelativa => estadoGuardado[idCorrelativa] === true);
-    }
+  function renderizarMaterias() {
+    planDiv.innerHTML = '';
 
-    function renderizarMaterias() {
-      planDiv.innerHTML = '';
+    años.forEach(año => {
+      const contenedorAño = document.createElement('div');
+      contenedorAño.classList.add('year-container');
 
-      años.forEach(año => {
-        const contenedorAño = document.createElement('div');
-        contenedorAño.classList.add('year-container');
+      const tituloAño = document.createElement('h2');
+      tituloAño.classList.add('year-title');
+      tituloAño.textContent = `${año}° Año`;
+      contenedorAño.appendChild(tituloAño);
 
-        // Título azul del año
-        const tituloAño = document.createElement('h2');
-        tituloAño.classList.add('year-title');
-        tituloAño.textContent = `${año}° Año`;
-        contenedorAño.appendChild(tituloAño);
+      const listaMaterias = document.createElement('div');
+      listaMaterias.classList.add('materias-list');
 
-        // Lista materias SIN scroll vertical para mostrar todo
-        const listaMaterias = document.createElement('div');
-        listaMaterias.classList.add('materias-list');
+      const materiasDelAño = materias.filter(m => m.año === año);
 
-        const materiasDelAño = materias.filter(m => m.año === año);
+      materiasDelAño.forEach(materia => {
+        const divMateria = document.createElement('div');
+        divMateria.classList.add('subject');
+        divMateria.id = materia.id;
+        divMateria.textContent = materia.nombre;
 
-        materiasDelAño.forEach(materia => {
-          const divMateria = document.createElement('div');
-          divMateria.classList.add('subject');
-          divMateria.id = materia.id;
-          divMateria.textContent = materia.nombre;
+        if (!estaHabilitada(materia)) {
+          divMateria.classList.add('disabled');
+        }
 
-          const habilitada = estaHabilitada(materia);
-          if (!habilitada) {
-            divMateria.classList.add('disabled');
-          }
+        if (estadoGuardado[materia.id]) {
+          divMateria.classList.add('completed');
+        }
 
-          if (estadoGuardado[materia.id]) {
-            divMateria.classList.add('completed');
-          }
+        divMateria.addEventListener('click', () => {
+          if (!estaHabilitada(materia)) return;
 
-          divMateria.addEventListener('click', () => {
-            if (!estaHabilitada(materia)) return;
-
-            estadoGuardado[materia.id] = !estadoGuardado[materia.id];
-            localStorage.setItem('estadoMaterias', JSON.stringify(estadoGuardado));
-            renderizarMaterias();
-          });
-
-          listaMaterias.appendChild(divMateria);
+          estadoGuardado[materia.id] = !estadoGuardado[materia.id];
+          localStorage.setItem('estadoMaterias', JSON.stringify(estadoGuardado));
+          renderizarMaterias();
         });
 
-        contenedorAño.appendChild(listaMaterias);
-        planDiv.appendChild(contenedorAño);
+        listaMaterias.appendChild(divMateria);
       });
-    }
 
-    renderizarMaterias();
-  </script>
+      contenedorAño.appendChild(listaMaterias);
+      planDiv.appendChild(contenedorAño);
+    });
+  }
+
+  renderizarMaterias();
+</script>
 </body>
 </html>
 
