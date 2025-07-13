@@ -3,69 +3,128 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Malla Interactiva - Plan de Estudios</title>
+  <title>Malla Interactiva - Plan de Estudios Vertical</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #e8f0fe;
-      margin: 0; padding: 20px;
-      color: #0b3d91;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0e7ff, #a5b8ff);
+      margin: 0; padding: 25px;
+      color: #0b2e7f;
+      user-select: none;
     }
     h1 {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 35px;
+      color: #0b3d91;
+      text-shadow: 1px 1px 3px #aac1ff;
+      font-weight: 700;
+      letter-spacing: 1.5px;
     }
+
+    /* Contenedor principal en flex horizontal para columnas */
+    #planEstudios {
+      display: flex;
+      gap: 25px;
+      justify-content: center;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 15px;
+    }
+
     .year-container {
-      margin-bottom: 40px;
-      border: 2px solid #0b3d91;
-      border-radius: 8px;
-      padding: 15px;
-      background: #c9d9f6;
+      border: 2.5px solid #2853c8;
+      border-radius: 10px;
+      padding: 15px 18px;
+      background: #c9d6ffcc;
+      box-shadow: 3px 4px 10px #7b8bc1aa;
+      min-width: 180px;
+      max-height: 80vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .year-container:hover {
+      box-shadow: 5px 7px 18px #5479ffcc;
     }
     .year-title {
-      font-size: 1.8em;
+      font-size: 1.9em;
       margin-bottom: 15px;
-      border-bottom: 2px solid #0b3d91;
-      padding-bottom: 5px;
+      border-bottom: 3px solid #1740c1;
+      padding-bottom: 8px;
+      font-weight: 600;
+      color: #1740c1;
+      text-shadow: 0 0 5px #3a57a9;
+      width: 100%;
+      text-align: center;
+      user-select: text;
     }
     .subject {
-      background: #d6e2ff;
-      margin: 8px 5px;
-      padding: 10px 15px;
-      border-radius: 6px;
-      display: inline-block;
+      background: #d3dbff;
+      margin: 6px 0;
+      padding: 8px 12px;
+      border-radius: 8px;
       cursor: pointer;
+      border: 2px solid #3a57a9;
+      width: 100%;
+      text-align: center;
+      font-weight: 600;
+      color: #1a2e8f;
+      box-shadow: 1px 2px 6px #2e4eb7aa;
+      transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.15s ease;
       user-select: none;
-      transition: background-color 0.3s ease;
-      border: 1.5px solid #2c4a9f;
-      min-width: 160px;
+      font-size: 0.9em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .subject:hover:not(.disabled):not(.completed) {
+      background-color: #a3b6ff;
+      color: #102f72;
+      box-shadow: 2px 4px 10px #2444a9cc;
+      transform: translateY(-2px);
     }
     .subject.disabled {
       cursor: not-allowed;
       opacity: 0.5;
-      background: #a9bbf5;
+      background: #9daae4;
       border-color: #7b8bc1;
+      color: #555d8f;
+      box-shadow: none;
       text-decoration: none !important;
     }
     .subject.completed {
       text-decoration: line-through;
-      background: #3a57a9;
+      background: #2946ad;
       color: white;
-      border-color: #20396c;
+      border-color: #1d2f6a;
+      box-shadow: 1px 2px 8px #112255cc;
     }
-    .subject:hover:not(.disabled):not(.completed) {
-      background-color: #acc8ff;
+    /* Scrollbar pequeño y azul para contenedores años */
+    .year-container::-webkit-scrollbar {
+      width: 7px;
+    }
+    .year-container::-webkit-scrollbar-track {
+      background: #c9d6ffcc;
+      border-radius: 10px;
+    }
+    .year-container::-webkit-scrollbar-thumb {
+      background-color: #2853c8;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>Malla Interactiva - Plan de Estudios</h1>
+  <h1>Malla Interactiva - Plan de Estudios Vertical</h1>
 
   <div id="planEstudios"></div>
 
   <script>
-    // Datos del plan con correlativas
-    // El formato es: id, nombre, año, correlativas (array con ids de materias previas)
+    // Datos de ejemplo del plan con correlativas
     const materias = [
       { id: 'mat1', nombre: 'Introducción a la Ingeniería', año: 1, correlativas: [] },
       { id: 'mat2', nombre: 'Química I', año: 1, correlativas: [] },
@@ -76,26 +135,22 @@
       { id: 'mat7', nombre: 'Álgebra y Geometría', año: 2, correlativas: ['mat3'] },
       { id: 'mat8', nombre: 'Representación Gráfica Digital', año: 2, correlativas: [] },
       { id: 'mat9', nombre: 'Física I', año: 2, correlativas: ['mat4'] },
-      // Agregá todas las materias de tu plan con su año y correlativas...
+      // Podés agregar todas las materias de tu plan con correlativas y año...
     ];
 
-    // Organizar materias por año
     const años = [...new Set(materias.map(m => m.año))].sort();
 
-    // Estado guardado en localStorage para mantener tachados aunque recargues
     const estadoGuardado = JSON.parse(localStorage.getItem('estadoMaterias')) || {};
 
     const planDiv = document.getElementById('planEstudios');
 
-    // Función para chequear si una materia está habilitada (tiene todas las correlativas aprobadas)
     function estaHabilitada(materia) {
-      if (materia.correlativas.length === 0) return true; // Sin correlativas, siempre habilitada
+      if (materia.correlativas.length === 0) return true;
       return materia.correlativas.every(idCorrelativa => estadoGuardado[idCorrelativa] === true);
     }
 
-    // Renderizar materias
     function renderizarMaterias() {
-      planDiv.innerHTML = ''; // limpio contenido
+      planDiv.innerHTML = '';
 
       años.forEach(año => {
         const contenedorAño = document.createElement('div');
@@ -124,18 +179,14 @@
           }
 
           divMateria.addEventListener('click', () => {
-            if (!estaHabilitada(materia)) return; // No hacer nada si no está habilitada
+            if (!estaHabilitada(materia)) return;
 
             if (estadoGuardado[materia.id]) {
-              // Si ya está tildada, la destildo
               estadoGuardado[materia.id] = false;
             } else {
-              // Tildo la materia
               estadoGuardado[materia.id] = true;
             }
-            // Guardar estado en localStorage
             localStorage.setItem('estadoMaterias', JSON.stringify(estadoGuardado));
-            // Volver a renderizar para actualizar estados
             renderizarMaterias();
           });
 
@@ -146,9 +197,7 @@
       });
     }
 
-    // Inicializar renderizado
     renderizarMaterias();
-
   </script>
 </body>
 </html>
