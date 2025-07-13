@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ingeniería Civil - Plan de estudio</title>
+<title>Malla Interactiva Compacta</title>
 <style>
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -117,11 +117,24 @@
     border-color: #1d2f6a;
     box-shadow: 1px 2px 8px #112255cc;
   }
+  #contador {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 1em;
+    color: #0b2e7f;
+    font-weight: 600;
+  }
+  #contador span {
+    font-weight: 700;
+    color: #1a3fbb;
+  }
 </style>
 </head>
 <body>
-<h1>Malla Interactiva Compacta</h1>
+<h1>Ingeniería Civil - Plan de estudio</h1>
 <div id="planEstudios"></div>
+<div id="contador"></div>
+
 <script>
   const materias = [
     // 1er Año
@@ -197,13 +210,24 @@
 
   const años = [...new Set(materias.map(m => m.año))].sort();
 
-  const estadoGuardado = JSON.parse(localStorage.getItem('estadoMaterias')) || {};
+  let estadoGuardado = JSON.parse(localStorage.getItem('estadoMaterias')) || {};
 
   const planDiv = document.getElementById('planEstudios');
+  const contadorDiv = document.getElementById('contador');
 
   function estaHabilitada(materia) {
     if (materia.correlativas.length === 0) return true;
     return materia.correlativas.every(idCorrelativa => estadoGuardado[idCorrelativa] === true);
+  }
+
+  function actualizarContador() {
+    const aprobadas = Object.values(estadoGuardado).filter(v => v === true).length;
+    const totales = materias.length;
+    const pendientes = totales - aprobadas;
+
+    contadorDiv.innerHTML = `
+      Materias aprobadas: <span>${aprobadas}</span> | Materias pendientes: <span>${pendientes}</span>
+    `;
   }
 
   function renderizarMaterias() {
@@ -243,6 +267,7 @@
           estadoGuardado[materia.id] = !estadoGuardado[materia.id];
           localStorage.setItem('estadoMaterias', JSON.stringify(estadoGuardado));
           renderizarMaterias();
+          actualizarContador();
         });
 
         listaMaterias.appendChild(divMateria);
@@ -251,9 +276,12 @@
       contenedorAño.appendChild(listaMaterias);
       planDiv.appendChild(contenedorAño);
     });
+
+    actualizarContador();
   }
 
   renderizarMaterias();
 </script>
 </body>
 </html>
+
